@@ -1,0 +1,15 @@
+@import "~gmf/theme/engine";
+
+@include md-register-theme("dark", (
+  primary: md-get-palette-color(blue, 500),
+  accent: md-get-palette-color(red, A200),
+  theme: dark
+));
+
+@import "~gmf/components/MdButton/theme";
+@import "~gmf/components/MdContent/theme";
+@import "~gmf/components/MdDivider/theme";
+@import "~gmf/components/MdDrawer/theme";
+@import "~gmf/components/MdIcon/theme";
+@import "~gmf/components/MdSnackbar/theme";
+@import "~gmf/components/MdToolbar/theme";
