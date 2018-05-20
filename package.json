@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": {
     "name": "ggoop",
-    "email": "samuel_abe@163.com"
+    "email": "yungangwu@gmail.com"
   },
   "files": [
     "dist",
@@ -115,39 +115,6 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^vue$": "<rootDir>/node_modules/vue/dist/vue.common.js",
-      "^vue-material(.*)$": "<rootDir>/src$1",
-      "^test(.*)$": "<rootDir>/test$1",
-      "^src(.*)$": "<rootDir>/src$1",
-      "^theme(.*)$": "<rootDir>/src/theme$1",
-      "^base(.*)$": "<rootDir>/src/base$1",
-      "^core(.*)$": "<rootDir>/src/core$1",
-      "^components(.*)$": "<rootDir>/src/components$1",
-      "\\.(css|scss)$": "<rootDir>/test/styleMock.js"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue"
-    },
-    "setupTestFrameworkScriptFile": "<rootDir>/test/setup.js",
-    "collectCoverageFrom": [
-      "src/**/*.{js,vue}",
-      "!src/**/index.js",
-      "!src/**/*.test.js"
-    ],
-    "coverageReporters": [
-      "lcov",
-      "json",
-      "html"
-    ]
   },
   "browserslist": [
     "> 1%"
