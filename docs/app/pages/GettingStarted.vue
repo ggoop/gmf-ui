@@ -32,7 +32,7 @@
       <p>To use Vue Material in your application, you can import only the components that you're really using. This will allow you to make your build way more compact than installing a full bundle.</p>
       <code-example title="Individual components">
         import Vue from 'vue'
-        import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components'
+        import { MdButton, MdContent, MdTabs } from 'gmf/dist/components'
         import 'vue-material/dist/vue-material.min.css'
 
         Vue.use(MdButton)

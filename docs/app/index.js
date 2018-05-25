@@ -1,32 +1,26 @@
 /* Third Party */
 import 'regenerator-runtime/runtime'
 import Vue from 'vue'
-import ga from 'vue-ga'
-import { sync } from 'vuex-router-sync'
-import VueMaterial from 'vue-material'
+import app from 'gmf/app'
+import component from 'gmf/component-all'
+import { routes } from './routes'
+import i18nLocales from './i18n'
 
 /* App */
-import App from './App'
-import { i18n, router } from './config'
+import AppRoot from './App'
 import store from './store'
 import './components'
 
 Vue.config.productionTip = false
-Vue.use(VueMaterial)
+app.use(component);
 
-ga(router, 'UA-85823257-1')
-sync(store, router)
+const mappedRoutes = routes.map(route => ({
+  ...route,
+  component: () => import(`./pages/${route.page}`)
+}))
 
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new Vue({
-    name: 'Root',
-    router,
-    store,
-    i18n,
-    render: mount => mount(App)
-  })
+app.route(mappedRoutes);
+app.store(store);
+app.i18n('enUS','',i18nLocales.enUS);
 
-  router.onReady(() => {
-    app.$mount('#docs')
-  })
-})
+app.run({elID:'#docs',app:AppRoot,locale:'enUS'});

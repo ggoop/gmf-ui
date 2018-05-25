@@ -97,7 +97,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/theme/engine";
+  @import "~gmf/theme/engine";
 
   @include md-register-theme("green-card", (
     primary: md-get-palette-color(green, 500)
@@ -115,8 +115,8 @@ export default {
     primary: md-get-palette-color(orange, 500)
   ));
 
-  @import "~vue-material/base/theme";
-  @import "~vue-material/components/MdCard/theme";
+  @import "~gmf/style/theme";
+  @import "~gmf/components/MdCard/theme";
 
   .md-card {
     width: 320px;

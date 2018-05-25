@@ -28,43 +28,6 @@ function getDirectories(src) {
   })
 }
 
-function getStats() {
-  return 'verbose';
-}
-function getCopyPaths() {
-  let copyPaths = [{
-      context: resolvePath(basePath),
-      from: '**/theme.scss',
-      to: resolvePath('dist/style')
-    },
-    {
-      context: resolvePath(themePath),
-      from: '**/*.scss',
-      to: resolvePath('dist/theme')
-    },
-    {
-      context: resolvePath(fontPath),
-      from: '**/*',
-      to: resolvePath('dist/fonts')
-    }
-  ]
-
-  componentList.forEach(component => {
-    const isSharable = existsSync(resolvePath(componentsPath, component, 'index.js'))
-
-    if (isSharable) {
-      copyPaths.push({
-        context: resolvePath(componentsPath, component),
-        from: '**/theme.scss',
-        to: resolvePath(`dist/components/${component}/theme.scss`),
-        toType: 'file'
-      })
-    }
-  })
-
-  return copyPaths
-}
-
 function getExtractedCSSName({ filename }) {
   if (filename) {
     return filename.replace('js', 'css')
@@ -72,22 +35,15 @@ function getExtractedCSSName({ filename }) {
 
   return '[name].css'
 }
-const packName='component'
-const componentsPath = 'src/components'
-const themePath = 'src/theme'
-const basePath = 'src/style'
-const fontPath = 'src/fonts'
-const componentList = getDirectories(resolvePath(componentsPath))
-const stats = getStats();
-export default entry => {
-  let entries = {}
-  entries[packName] = './src/component';
-  entries[packName + '-all'] = './src/component-all';
 
+const moduleName = classify(pack.name)
+
+export default entry => {
+  let entries = {};
+  entries['components/index'] = './src/components';
   let output = {
-    filename: entry.compress ? '[name].min.js' : '[name].js',
+    filename: '[name].js',
     path: resolvePath(config.dist),
-    library: classify(packName),
     libraryTarget: entry.libraryTarget
   }
 
@@ -123,8 +79,7 @@ export default entry => {
         DEBUG: false
       }),
       new webpack.optimize.ModuleConcatenationPlugin()
-    ],
-    stats
+    ]
   }
 
   if (entry.compress) {
@@ -215,11 +170,6 @@ export default entry => {
             test: /\.scss$/,
             loader: scssLoader,
             exclude: /node_modules/
-          },
-          {
-            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
-            loader: 'file',
-            exclude: /node_modules/
           }
         ]
       }
@@ -247,11 +197,6 @@ export default entry => {
             test: /\.scss$/,
             use: ['vue-style-loader', 'css-loader', 'sass-loader'],
             exclude: /node_modules/
-          },
-          {
-            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
-            loader: 'file',
-            exclude: /node_modules/
           }
         ]
       }
@@ -268,14 +213,5 @@ export default entry => {
       new webpack.optimize.OccurrenceOrderPlugin()
     ]
   })
-
-  if (entry.analyze && process.argv.includes('--analyze')) {
-    webpackConfig.plugins.push(new BundleAnalyzerPlugin({
-      analyzerPort: getRandomInt(8000, 8999)
-    }))
-  }
-  webpackConfig.plugins.push(new CopyWebpackPlugin(getCopyPaths()))
-  
-
   return webpackConfig
 }

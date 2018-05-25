@@ -2,6 +2,7 @@ import Vue from 'vue';
 import snakeCase from 'gmf/core/utils/MdSnakeCase';
 import isArray from 'lodash/isArray'
 import startsWith from 'lodash/startsWith';
+import merge from 'lodash/merge';
 const wrapApp = {
   template: '<md-wrap :name="wrap"></md-wrap>',
   computed: {
@@ -82,6 +83,7 @@ class gmfConfig {
   constructor() {
     this.routes = [];
     this.stores=[];
+    this.i18ns={messages:{}};
     this.defaultRoutes = defaultRoutes;
   }
   route(routes) {
@@ -92,6 +94,14 @@ class gmfConfig {
     } else {
       this.routes.push(routes);
     }
+  }
+  //i18n('en','home',{title:'title',name:'name of name'})
+  i18n(locale,name,i18n){
+    if(name){
+      this.i18ns.messages[locale][name]=merge(this.i18ns.messages[locale][name],i18n);
+    }else{
+      this.i18ns.messages[locale]=merge(this.i18ns.messages[locale],i18n);
+    }    
   }
   store(store){
     if(!store.name)return;

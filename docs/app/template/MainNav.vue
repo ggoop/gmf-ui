@@ -21,7 +21,7 @@
 
 <script>
   import { mapState, mapMutations } from 'vuex'
-  import * as types from 'doc/app/store/mutation-types'
+  import * as types from 'docs/app/store/mutation-types'
   import MainNavContent from './MainNavContent'
 
   export default {
@@ -58,8 +58,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdLayout/mixins";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdLayout/mixins";
 
   .main-nav {
     width: 230px;

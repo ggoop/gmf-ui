@@ -25,7 +25,7 @@ function classify(str) {
 function getStats() {
   return 'verbose';
 }
-const packName='gmf-bridge'
+const packName='bridge'
 const stats = getStats();
 
 export default entry => {

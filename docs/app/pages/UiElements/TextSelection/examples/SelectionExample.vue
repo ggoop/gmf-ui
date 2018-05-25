@@ -20,7 +20,7 @@
 </script>
 
 <style lang="scss">
-  @import "~vue-material/theme/engine";
+  @import "~gmf/theme/engine";
 
   @include md-register-theme("selection-black", (
     accent: md-get-palette-color(black, 500)
@@ -31,8 +31,8 @@
     theme: dark
   ));
 
-  @import "~vue-material/base/theme";
-  @import "~vue-material/components/MdContent/theme";
+  @import "~gmf/style/theme";
+  @import "~gmf/components/MdContent/theme";
 </style>
 
 <style lang="scss" scoped>

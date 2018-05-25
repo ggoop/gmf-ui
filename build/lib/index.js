@@ -3,7 +3,7 @@ import webpack from 'webpack'
 import appConfig from './webpack.app'
 import bridgeConfig from './webpack.bridge'
 import componentConfig from './webpack.component'
-
+import componentsConfig from './webpack.components'
 import generateThemes from './themes'
 
 const spinner = new Ora({
@@ -41,6 +41,14 @@ const entries = [
     compress: true,
     css: true
   }),
+
+  //componentsConfig
+  componentsConfig({
+    components: true,
+    libraryTarget: 'umd',
+    compress: true,
+    css: true
+  })
 ]
 
 spinner.start()

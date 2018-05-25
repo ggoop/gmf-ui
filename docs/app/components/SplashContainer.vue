@@ -45,7 +45,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
+  @import "~gmf/components/MdAnimation/variables";
 
   .splash-container {
     margin: auto;

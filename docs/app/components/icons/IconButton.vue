@@ -6,8 +6,8 @@
 </template>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/theme/engine";
 
   .icon-button {
     position: relative;

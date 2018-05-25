@@ -11,7 +11,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdLayout/mixins";
+  @import "~gmf/components/MdLayout/mixins";
 
   $container-size: 100px;
   $item-size: $container-size * .8;

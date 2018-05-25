@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import MdComponent from 'vue-material/core/MdComponent'
+  import MdComponent from 'gmf/core/MdComponent'
 
   export default MdComponent({
     name: 'NoteBlock',
@@ -18,8 +18,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/theme/engine";
 
   $note-border: md-get-palette-color(orange, A200);
   $alert-border: md-get-palette-color(red, A200);

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import MdComponent from 'vue-material/core/MdComponent'
+  import MdComponent from 'gmf/core/MdComponent'
 
   export default MdComponent({
     name: 'ApiTable',
@@ -44,8 +44,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/theme/engine";
 
   $bg-color: md-get-palette-color(grey, 200);
   $border-color: darken($bg-color, 3%);

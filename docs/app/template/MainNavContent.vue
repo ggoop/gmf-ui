@@ -108,7 +108,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/theme/engine";
+  @import "~gmf/theme/engine";
 
   .main-nav-content {
     a {

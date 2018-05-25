@@ -27,9 +27,9 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdLayout/mixins";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdLayout/mixins";
+  @import "~gmf/theme/engine";
 
   .main-footer {
     height: 96px;

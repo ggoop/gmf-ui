@@ -3,8 +3,8 @@
 </template>
 
 <style lang="scss">
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/theme/engine";
 
   .logo-vue-material {
     $hue1: blue, red, pink, green, indigo, amber;
@@ -80,7 +80,7 @@
 </style>
 
 <script>
-import MdSvgLoader from 'vue-material/components/MdSvgLoader/MdSvgLoader'
+import MdSvgLoader from 'gmf/components/MdSvgLoader/MdSvgLoader'
 
 export default {
   name: 'LogoVueMaterial',

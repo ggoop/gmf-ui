@@ -52,7 +52,7 @@ function getCopyPaths() {
   return copyPaths;
 }
 
-const packName = 'gmf-app'
+const packName = 'app'
 const componentsPath = 'src/components'
 const themePath = 'src/theme'
 const basePath = 'src/style'

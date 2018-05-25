@@ -75,7 +75,7 @@
 
 <script>
   import { mapState, mapActions, mapMutations } from 'vuex'
-  import * as types from 'doc/app/store/mutation-types'
+  import * as types from 'docs/app/store/mutation-types'
 
   export default {
     name: 'MainHeader',
@@ -137,9 +137,9 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdElevation/mixins";
-  @import "~components/MdLayout/mixins";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdElevation/mixins";
+  @import "~gmf/components/MdLayout/mixins";
 
   .main-header {
     margin: auto;

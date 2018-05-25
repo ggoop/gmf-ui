@@ -16,7 +16,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
+  @import "~gmf/components/MdAnimation/variables";
 
   .code-loading {
     min-height: 150px;

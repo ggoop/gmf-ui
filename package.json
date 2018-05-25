@@ -11,9 +11,9 @@
     "dist",
     "src"
   ],
-  "main": "dist/gmf-app.js",
-  "module": "dist/gmf-app.js",
-  "unpkg": "dist/gmf-app.min.js",
+  "main": "dist/app.js",
+  "module": "dist/app.js",
+  "unpkg": "dist/app.min.js",
   "scripts": {
     "dev": "babel-node build/local",
     "build": "rm -rf dist/ && babel-node build/lib",
@@ -28,7 +28,10 @@
   "peerDependencies": {
     "vue": "^2.5.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "chart.js": "^2.7.2",
+    "highcharts": "^6.1.0"
+  },
   "devDependencies": {
     "autoprefixer": "^7.2.5",
     "avoriaz": "^6.3.0",

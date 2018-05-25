@@ -42,9 +42,9 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdIcon/mixins";
-  @import "~vue-material/components/MdLayout/mixins";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdIcon/mixins";
+  @import "~gmf/components/MdLayout/mixins";
 
   .home-page  {
     width: 100%;
@@ -92,9 +92,9 @@
 </style>
 
 <style lang="scss">
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdIcon/mixins";
-  @import "~vue-material/components/MdLayout/mixins";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdIcon/mixins";
+  @import "~gmf/components/MdLayout/mixins";
 
   .page-wrapper {
     max-width: 1344px;

@@ -9,9 +9,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["GmfBridge"] = factory();
+		exports["Bridge"] = factory();
 	else
-		root["GmfBridge"] = factory();
+		root["Bridge"] = factory();
 })(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache

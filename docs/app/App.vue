@@ -72,6 +72,14 @@
     mounted () {
       window.setTimeout(() => {
         this.message = true
+        this.$root.issueUid().then(res=>{
+ console.log(res);
+        },err=>{
+ console.log(err);
+        }).catch(err=>{
+          console.log('catch');
+        })
+     
       }, 2000)
     }
   }
@@ -91,9 +99,9 @@
 </style>
 
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdLayout/mixins";
-  @import "~vue-material/theme/engine";
+  @import "~gmf/components/MdAnimation/variables";
+  @import "~gmf/components/MdLayout/mixins";
+  @import "~gmf/theme/engine";
 
   .container {
     min-height: 100%;

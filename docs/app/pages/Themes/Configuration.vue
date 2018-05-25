@@ -10,14 +10,14 @@
       <p>The simplest markup to create a theme in Vue Material is:</p>
 
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: md-get-palette-color(blue, A200), // The primary color of your application
           accent: md-get-palette-color(red, A200) // The accent or secondary color
         ));
 
-        @import "~vue-material/dist/theme/all"; // Apply the theme
+        @import "~gmf/dist/theme/all"; // Apply the theme
       </code-example>
     </div>
 
@@ -51,14 +51,14 @@
       </ul>
 
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: md-get-palette-color(green, A200), // The primary color of your application
           accent: md-get-palette-color(pink, 500) // The accent or secondary color
         ));
 
-        @import "~vue-material/dist/theme/all"; // Apply the theme
+        @import "~gmf/dist/theme/all"; // Apply the theme
       </code-example>
     </div>
 
@@ -71,13 +71,13 @@
       </ul>
       <p>This means that if you do not pass all arguments of <code>md-register-theme</code>, the default ones will be applied:</p>
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: md-get-palette-color(blue, A200) // The primary color of your application
         ));
 
-        @import "~vue-material/dist/theme/all"; // Apply the theme
+        @import "~gmf/dist/theme/all"; // Apply the theme
       </code-example>
     </div>
 
@@ -85,14 +85,14 @@
       <h3 class="md-title">Using your own colors</h3>
       <p>Sometimes the colors of your brand do not match with the material ones. It is possible to pass your own colors, without using the Material Design Palette:</p>
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: #3fffbe, // The primary color of your brand
           accent: #1a11e8 // The secondary color of your brand
         ));
 
-        @import "~vue-material/dist/theme/all"; // Apply the theme
+        @import "~gmf/dist/theme/all"; // Apply the theme
       </code-example>
     </div>
 
@@ -100,7 +100,7 @@
       <h3 class="md-title">Dark Themes</h3>
       <p>By default light colors will be used on backgrounds, but you can easily change this, by passing a <code>theme</code> attribute:</p>
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: md-get-palette-color(blue, A200), // The primary color of your application
@@ -108,7 +108,7 @@
           theme: dark // This can be dark or light
         ));
 
-        @import "~vue-material/dist/theme/all"; // Apply the theme
+        @import "~gmf/dist/theme/all"; // Apply the theme
       </code-example>
     </div>
 
@@ -116,7 +116,7 @@
       <h3 class="md-title">Theming individual components</h3>
       <p>You can theme individual components without effort, by calling the components one by one. This will make your final build size smaller and more performatic:</p>
       <code-example label="SCSS" lang="scss">
-        @import "~vue-material/dist/theme/engine"; // Import the theme engine
+        @import "~gmf/dist/theme/engine"; // Import the theme engine
 
         @include md-register-theme("default", (
           primary: md-get-palette-color(blue, A200), // The primary color of your application
@@ -124,9 +124,9 @@
           theme: dark // This can be dark or light
         ));
 
-        @import "~vue-material/dist/components/MdButton/theme"; // Apply the Button theme
-        @import "~vue-material/dist/components/MdContent/theme"; // Apply the Content theme
-        @import "~vue-material/dist/components/MdToolbar/theme"; // Apply the Toolbar theme
+        @import "~gmf/dist/components/MdButton/theme"; // Apply the Button theme
+        @import "~gmf/dist/components/MdContent/theme"; // Apply the Content theme
+        @import "~gmf/dist/components/MdToolbar/theme"; // Apply the Toolbar theme
       </code-example>
     </div>
   </page-container>

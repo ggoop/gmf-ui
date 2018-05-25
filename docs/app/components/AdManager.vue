@@ -39,7 +39,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/theme/engine";
+  @import "~gmf/theme/engine";
 
   $ad-responsive-big: 1690px;
   $ad-responsive-small: 768px;

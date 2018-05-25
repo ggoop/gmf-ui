@@ -13,7 +13,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "~vue-material/theme/engine";
+  @import "~gmf/theme/engine";
 
   .md-layout-item {
     height: 40px;
