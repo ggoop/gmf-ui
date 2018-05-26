@@ -1,5 +1,5 @@
 /*!
- * gmf-ui v1.0.0
+ * gmf-ui v1.0.1
  * Made with <3 by ggoop 2018
  * Released under the MIT License.
  */
@@ -4089,78 +4089,19 @@ var _vueI18n = __webpack_require__(250);
 
 var _vueI18n2 = _interopRequireDefault(_vueI18n);
 
+var _MdCombineURLs = __webpack_require__(251);
+
+var _MdCombineURLs2 = _interopRequireDefault(_MdCombineURLs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function getAppConfig() {
-  return {
-    methods: {
-      changedConfig: function changedConfig() {
-        (0, _extend2.default)(window.gmfConfig, this.configs);
-        this.$http.defaults.headers.common.Ent = this.configs.ent ? this.configs.ent.id : false;
-        if (this.configs.token) {
-          this.$http.defaults.headers.common.Authorization = (this.configs.token.token_type ? this.configs.token.token_type : "Bearer") + " " + this.configs.token.access_token;
-        } else {
-          this.$http.defaults.headers.common.Authorization = false;
-        }
-      },
-      loadEnums: function loadEnums() {
-        var _this = this;
-
-        return new Promise(function (resolved, rejected) {
-          _this.$http.get('sys/enums/all').then(function (res) {
-            if (res && res.data && res.data.data) {
-              res.data.data.forEach(function (item) {
-                _this.setCacheEnum(item);
-              });
-            }
-            resolved();
-          }, function (err) {
-            rejected();
-          });
-        });
-      },
-      setCacheEnum: function setCacheEnum(item) {
-        _MdEnumCache2.default.set(item);
-      },
-      getCacheEnum: function getCacheEnum(type) {
-        return _MdEnumCache2.default.get(type);
-      },
-      getCacheEnumName: function getCacheEnumName(type, item) {
-        return _MdEnumCache2.default.getEnumName(type, item);
-      },
-      issueUid: function issueUid() {
-        var _this2 = this;
-
-        return new Promise(function (resolved, rejected) {
-          _this2.$http.get('sys/datas/uid').then(function (res) {
-            resolved(response.data.data);
-          }, function (err) {
-            rejected(false);
-          });
-        });
-      },
-      issueSn: function issueSn(node, num) {
-        var _this3 = this;
-
-        return new Promise(function (resolved, rejected) {
-          _this3.$http.get('sys/datas/sn', { params: { node: node, num: num } }).then(function (res) {
-            resolved(response.data.data);
-          }, function (err) {
-            rejected(false);
-          });
-        });
-      }
-    }
-  };
-}
 
 var Start = function () {
   function Start(columnComponent) {
     _classCallCheck(this, Start);
 
-    this.routes = [];
+    this.configs = [];
   }
 
   _createClass(Start, [{
@@ -4172,6 +4113,11 @@ var Start = function () {
     key: 'route',
     value: function route(routes) {
       _config2.default.route(routes);
+    }
+  }, {
+    key: 'config',
+    value: function config(fn) {
+      this.configs[0] = fn;
     }
   }, {
     key: 'store',
@@ -4188,16 +4134,22 @@ var Start = function () {
     value: function run(options, mixin) {
       options = options || {};
       var elID = options.elID || '#gmfApp';
+      _http2.default.defaults.baseURL = (0, _MdCombineURLs2.default)(options.host, '/api');
+      _http2.default.defaults.headers = { common: { Ent: false } };
+
+      //rootData
+      var rootData = {
+        'appName': '',
+        'title': '',
+        'configs': { home: '/', ent: false, user: false, token: false, auth: { route: { name: 'auth.login' } } }
+      };
+
       /*routes*/
       _vue2.default.use(_vueRouter2.default);
-      var routes = _config2.default.routes;
-      this.init();
-      if (options.routes) {
-        routes = routes.concat(options.routes);
-      }
+      initVue(options);
       var router = {
         mode: 'history',
-        routes: routes,
+        routes: _config2.default.routes,
         scrollBehavior: function scrollBehavior(to, from, savedPosition) {
           if (savedPosition) {
             return savedPosition;
@@ -4238,32 +4190,28 @@ var Start = function () {
         locale: options.locale || 'zh',
         messages: _config2.default.i18ns.messages
       });
-
-      //rootData
-      var rootData = {
-        'appName': '',
-        'title': '',
-        'configs': { home: '/', ent: false, user: false, token: false, auth: { route: { name: 'auth.login' } } }
-      };
-
-      document.addEventListener('DOMContentLoaded', function () {
-        Promise.all((0, _values2.default)(options)).then(function (values) {
-          if (window.gmfConfig) {
-            (0, _extend2.default)(rootData.configs, window.gmfConfig);
-          }
-          var appConfig = getAppConfig();
-          appConfig.router = vueRouter;
-          appConfig.store = store;
-          appConfig.data = rootData;
-          appConfig.i18n = i18n;
-          if (options.app) {
-            appConfig.render = function (mount) {
-              return mount(options.app);
-            };
-          }
-          if (mixin) {
-            appConfig.mixins = [mixin];
-          }
+      Promise.all(this.configs).then(function (res) {
+        (0, _extend2.default)(rootData.configs, res);
+        initHttp(_http2.default, res);
+        if (res && res.loadEnums) {
+          return loadEnums();
+        }
+        return true;
+      }).then(function (res) {
+        var appConfig = getAppConfig();
+        appConfig.router = vueRouter;
+        appConfig.store = store;
+        appConfig.data = rootData;
+        appConfig.i18n = i18n;
+        if (options.app) {
+          appConfig.render = function (mount) {
+            return mount(options.app);
+          };
+        }
+        if (mixin) {
+          appConfig.mixins = [mixin];
+        }
+        document.addEventListener('DOMContentLoaded', function () {
           var app = new _vue2.default(appConfig);
           vueRouter.onReady(function () {
             app.$mount(elID);
@@ -4271,79 +4219,143 @@ var Start = function () {
         });
       });
     }
-  }, {
-    key: 'init',
-    value: function init() {
-      _http2.default.defaults.baseURL = '/api';
-      _http2.default.defaults.headers = { common: { Ent: false } };
-      _vue2.default.prototype.$http = _http2.default;
-
-      _vue2.default.prototype.$toast = function (toast) {
-        this.$root.$refs.rootToast && this.$root.$refs.rootToast.toast(toast);
-      };
-      _vue2.default.prototype.$setConfigs = function (configs) {
-        (0, _extend2.default)(this.$root.configs, configs);
-        this.$root.changedConfig();
-      };
-      _vue2.default.prototype.$lang = _lang2.default;
-      _vue2.default.prototype.$go = function (options, isReplace) {
-        this.$router && this.$router[isReplace ? 'replace' : 'push'](options);
-      };
-      _vue2.default.prototype.$goID = function (id, options, isReplace) {
-        var localtion = { name: 'id', params: { id: id } };
-        isReplace = !!isReplace;
-        localtion = (0, _merge2.default)(localtion, options);
-        this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
-      };
-      _vue2.default.prototype.$goModule = function (module, options, isReplace) {
-        var localtion = { name: 'module', params: { module: module } };
-        isReplace = !!isReplace;
-        localtion = (0, _merge2.default)(localtion, options);
-        this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
-      };
-      _vue2.default.prototype.$goApp = function (app, options, isReplace) {
-        var localtion = { name: 'app' };
-        isReplace = !!isReplace;
-        localtion = (0, _merge2.default)(localtion, options, { params: { app: app } });
-        this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
-      };
-      _vue2.default.prototype.$hasRole = function (roles) {
-        var _this4 = this;
-
-        if (!roles || !this.$root.configs || !this.$root.configs.roles) return false;
-        if ((0, _isString2.default)(roles)) {
-          roles = roles.split(',');
-        }
-        return roles.map(function (v) {
-          return _this4.$root.configs.roles.indexOf(v) >= 0;
-        }).filter(function (v) {
-          return v;
-        }).length > 0;
-      };
-      _vue2.default.prototype.$canPermit = function (permits) {
-        var _this5 = this;
-
-        if (!permits || !this.$root.configs || !this.$root.configs.permits) return false;
-        if ((0, _isString2.default)(roles)) {
-          roles = roles.split(',');
-        }
-        return permits.map(function (v) {
-          return _this5.$root.configs.permits.indexOf(v) >= 0;
-        }).filter(function (v) {
-          return v;
-        }).length > 0;
-      };
-      _vue2.default.prototype.$documentTitle = function (title) {
-        document.title = title;
-        this.$root.title = title;
-      };
-    }
   }]);
 
   return Start;
 }();
 
 exports.default = Start;
+
+
+function initHttp(http, config) {
+  http.defaults.headers.common.Ent = config.ent ? config.ent.id : false;
+  if (config.token) {
+    http.defaults.headers.common.Authorization = (config.token.token_type ? config.token.token_type : "Bearer") + " " + config.token.access_token;
+  } else {
+    http.defaults.headers.common.Authorization = false;
+  }
+}
+function getAppConfig() {
+  return {
+    methods: {
+      changedConfig: function changedConfig() {
+        (0, _extend2.default)(window.gmfConfig, this.configs);
+        initHttp(this.$http, this.configs);
+      },
+      setCacheEnum: function setCacheEnum(item) {
+        _MdEnumCache2.default.set(item);
+      },
+      getCacheEnum: function getCacheEnum(type) {
+        return _MdEnumCache2.default.get(type);
+      },
+      getCacheEnumName: function getCacheEnumName(type, item) {
+        return _MdEnumCache2.default.getEnumName(type, item);
+      },
+      issueUid: function issueUid() {
+        var _this = this;
+
+        return new Promise(function (resolved, rejected) {
+          _this.$http.get('sys/datas/uid').then(function (res) {
+            resolved(res.data.data);
+          }, function (err) {
+            rejected(false);
+          });
+        });
+      },
+      issueSn: function issueSn(node, num) {
+        var _this2 = this;
+
+        return new Promise(function (resolved, rejected) {
+          _this2.$http.get('sys/datas/sn', { params: { node: node, num: num } }).then(function (res) {
+            resolved(res.data.data);
+          }, function (err) {
+            rejected(false);
+          });
+        });
+      }
+    }
+  };
+}
+
+function initVue(options) {
+  options = options || {};
+
+  _vue2.default.prototype.$http = _http2.default;
+
+  _vue2.default.prototype.$toast = function (toast) {
+    this.$root.$refs.rootToast && this.$root.$refs.rootToast.toast(toast);
+  };
+  _vue2.default.prototype.$setConfigs = function (configs) {
+    (0, _extend2.default)(this.$root.configs, configs);
+    this.$root.changedConfig();
+  };
+  _vue2.default.prototype.$lang = _lang2.default;
+  _vue2.default.prototype.$go = function (options, isReplace) {
+    this.$router && this.$router[isReplace ? 'replace' : 'push'](options);
+  };
+  _vue2.default.prototype.$goID = function (id, options, isReplace) {
+    var localtion = { name: 'id', params: { id: id } };
+    isReplace = !!isReplace;
+    localtion = (0, _merge2.default)(localtion, options);
+    this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
+  };
+  _vue2.default.prototype.$goModule = function (module, options, isReplace) {
+    var localtion = { name: 'module', params: { module: module } };
+    isReplace = !!isReplace;
+    localtion = (0, _merge2.default)(localtion, options);
+    this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
+  };
+  _vue2.default.prototype.$goApp = function (app, options, isReplace) {
+    var localtion = { name: 'app' };
+    isReplace = !!isReplace;
+    localtion = (0, _merge2.default)(localtion, options, { params: { app: app } });
+    this.$router && this.$router[isReplace ? 'replace' : 'push'](localtion);
+  };
+  _vue2.default.prototype.$hasRole = function (roles) {
+    var _this3 = this;
+
+    if (!roles || !this.$root.configs || !this.$root.configs.roles) return false;
+    if ((0, _isString2.default)(roles)) {
+      roles = roles.split(',');
+    }
+    return roles.map(function (v) {
+      return _this3.$root.configs.roles.indexOf(v) >= 0;
+    }).filter(function (v) {
+      return v;
+    }).length > 0;
+  };
+  _vue2.default.prototype.$canPermit = function (permits) {
+    var _this4 = this;
+
+    if (!permits || !this.$root.configs || !this.$root.configs.permits) return false;
+    if ((0, _isString2.default)(roles)) {
+      roles = roles.split(',');
+    }
+    return permits.map(function (v) {
+      return _this4.$root.configs.permits.indexOf(v) >= 0;
+    }).filter(function (v) {
+      return v;
+    }).length > 0;
+  };
+  _vue2.default.prototype.$documentTitle = function (title) {
+    document.title = title;
+    this.$root.title = title;
+  };
+}
+function loadEnums() {
+  return new Promise(function (resolved, rejected) {
+    _http2.default.get('sys/enums/all').then(function (res) {
+      if (res && res.data && res.data.data) {
+        res.data.data.forEach(function (item) {
+          _MdEnumCache2.default.set(item);
+        });
+      }
+      resolved();
+    }, function (err) {
+      rejected();
+    });
+  });
+}
 
 /***/ }),
 /* 96 */
@@ -14555,7 +14567,7 @@ exports.default = (_types$SET_PAGE_TITLE = {}, _defineProperty(_types$SET_PAGE_T
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /*!
- * vue-i18n v7.6.0 
+ * vue-i18n v7.7.0 
  * (c) 2018 kazuya kawaguchi
  * Released under the MIT License.
  */
@@ -15912,7 +15924,7 @@ VueI18n.prototype.getLocaleMessage = function getLocaleMessage (locale) {
 };
 
 VueI18n.prototype.setLocaleMessage = function setLocaleMessage (locale, message) {
-  this._vm.messages[locale] = message;
+  this._vm.$set(this._vm.messages, locale, message);
 };
 
 VueI18n.prototype.mergeLocaleMessage = function mergeLocaleMessage (locale, message) {
@@ -15924,7 +15936,7 @@ VueI18n.prototype.getDateTimeFormat = function getDateTimeFormat (locale) {
 };
 
 VueI18n.prototype.setDateTimeFormat = function setDateTimeFormat (locale, format) {
-  this._vm.dateTimeFormats[locale] = format;
+  this._vm.$set(this._vm.dateTimeFormats, locale, format);
 };
 
 VueI18n.prototype.mergeDateTimeFormat = function mergeDateTimeFormat (locale, format) {
@@ -15946,8 +15958,8 @@ VueI18n.prototype._localizeDateTime = function _localizeDateTime (
     if (false) {
       warn(("Fall back to '" + fallback + "' datetime formats from '" + locale + " datetime formats."));
       }
-    _locale = fallback;
-      formats = dateTimeFormats[_locale];
+      _locale = fallback;
+    formats = dateTimeFormats[_locale];
   }
 
   if (isNull(formats) || isNull(formats[key])) {
@@ -16023,7 +16035,7 @@ VueI18n.prototype.getNumberFormat = function getNumberFormat (locale) {
 };
 
 VueI18n.prototype.setNumberFormat = function setNumberFormat (locale, format) {
-  this._vm.numberFormats[locale] = format;
+  this._vm.$set(this._vm.numberFormats, locale, format);
 };
 
 VueI18n.prototype.mergeNumberFormat = function mergeNumberFormat (locale, format) {
@@ -16045,12 +16057,12 @@ VueI18n.prototype._localizeNumber = function _localizeNumber (
   if (isNull(formats) || isNull(formats[key])) {
     if (false) {
       warn(("Fall back to '" + fallback + "' number formats from '" + locale + " number formats."));
-      }
-      _locale = fallback;
+    }
+    _locale = fallback;
     formats = numberFormats[_locale];
-  }
+    }
 
-  if (isNull(formats) || isNull(formats[key])) {
+    if (isNull(formats) || isNull(formats[key])) {
     return null
   } else {
     var format = formats[key];
@@ -16143,10 +16155,33 @@ VueI18n.availabilities = {
   numberFormat: canUseNumberFormat
 };
 VueI18n.install = install;
-VueI18n.version = '7.6.0';
+VueI18n.version = '7.7.0';
 
 /* harmony default export */ __webpack_exports__["default"] = (VueI18n);
 
+
+/***/ }),
+/* 251 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Creates a new URL by combining the specified URLs
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} relativeURL The relative URL
+ * @returns {string} The combined URL
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = combineURLs;
+function combineURLs(baseURL, relativeURL) {
+  return relativeURL ? baseURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : '/' + relativeURL.replace(/^\/+/, '') : baseURL;
+};
 
 /***/ })
 /******/ ]);

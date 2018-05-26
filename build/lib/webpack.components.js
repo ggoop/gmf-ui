@@ -35,9 +35,29 @@ function getExtractedCSSName({ filename }) {
 
   return '[name].css'
 }
+function setComponentsConfig (entries, output) {
+  entries = {
+    'components/index': [`./${componentsPath}`]
+  }
+
+  output.filename = '[name].js'
+
+  delete output.library
+
+  componentList.forEach(component => {
+    const isSharable = existsSync(resolvePath(componentsPath, component, 'index.js'))
+
+    if (isSharable) {
+      entries[join('components', component, 'index')] = [`./${join(componentsPath, component)}/index`]
+    }
+  })
+
+  return { entries, output }
+}
 
 const moduleName = classify(pack.name)
-
+const componentsPath = 'src/components'
+const componentList = getDirectories(resolvePath(componentsPath))
 export default entry => {
   let entries = {};
   entries['components/index'] = './src/components';
@@ -45,6 +65,11 @@ export default entry => {
     filename: '[name].js',
     path: resolvePath(config.dist),
     libraryTarget: entry.libraryTarget
+  }
+  if (entry.components) {
+    const config = setComponentsConfig(entries, output)
+    entries = config.entries
+    output = config.output
   }
 
   let webpackConfig = {

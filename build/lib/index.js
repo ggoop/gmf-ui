@@ -15,40 +15,41 @@ const spinner = new Ora({
 const entries = [
   //bridgeConfig
   bridgeConfig({
-    libraryTarget: 'umd',
-    compress: true
-  }),
-  bridgeConfig({
     libraryTarget: 'umd'
   }),
+  // bridgeConfig({
+  //   libraryTarget: 'umd',
+  //   compress: true
+  // }),
+  
   //appConfig
   appConfig({
     libraryTarget: 'umd',
     css: true
   }),
-  appConfig({
-    libraryTarget: 'umd',
-    compress: true,
-    css: true
-  }),
+  // appConfig({
+  //   libraryTarget: 'umd',
+  //   compress: true,
+  //   css: true
+  // }),
   //uiConfig
   componentConfig({
     libraryTarget: 'umd',
     css: true
   }),
-  componentConfig({
-    libraryTarget: 'umd',
-    compress: true,
-    css: true
-  }),
+  // componentConfig({
+  //   libraryTarget: 'umd',
+  //   compress: true,
+  //   css: true
+  // }),
 
   //componentsConfig
-  componentsConfig({
-    components: true,
-    libraryTarget: 'umd',
-    compress: true,
-    css: true
-  })
+  // componentsConfig({
+  //   components: true,
+  //   libraryTarget: 'umd',
+  //   compress: true,
+  //   css: true
+  // })
 ]
 
 spinner.start()
