@@ -13,10 +13,8 @@ import storeConfig from './store';
 import Vuei18n from 'vue-i18n'
 import combineURL from './core/utils/MdCombineURLs'
 
-
 export default class Start {
   constructor(columnComponent) {
-    this.configs=[];
   }
   use(component) {
     Vue.use(component);
@@ -25,7 +23,7 @@ export default class Start {
     gmfConfig.route(routes);
   }
   config(fn){
-    this.configs[0]=fn;
+    gmfConfig.config(fn);
   }
   store(store) {
     gmfConfig.store(store);
@@ -38,87 +36,97 @@ export default class Start {
     const elID = options.elID || '#gmfApp';
     http.defaults.baseURL =combineURL(options.host,'/api');
     http.defaults.headers = { common: { Ent: false } };
-
-     //rootData
-     const rootData = {
-      'appName': '',
-      'title': '',
-      'configs': { home: '/', ent: false, user: false, token: false, auth: { route: { name: 'auth.login' } } }
-    };
-
-    /*routes*/
-    Vue.use(VueRouter);
     initVue(options); 
-    const router = {
-      mode: 'history',
-      routes: gmfConfig.routes,
-      scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-          return savedPosition
-        } else {
-          if (from.meta.keepAlive) {
-            from.meta.savedPosition = document.body.scrollTop
-          }
-          return { x: 0, y: to.meta.savedPosition || 0 }
-        }
-      },
-    };
-    const vueRouter = new VueRouter(router);
-    vueRouter.beforeEach((to, from, next) => {
-      if (to.meta.requiresAuth && !rootData.configs.user) {
-        if (isString(rootData.configs.auth.route)) {
-          next(rootData.configs.auth.route + "?continue=" + to.fullPath);
-        } else {
-          next(extend({}, rootData.configs.auth.route, { query: { continue: to.fullPath } }));
-        }
-      } else {
-        next();
-      }
-    });
+
+    const appConfig=getAppConfig();
+    /*routes*/
+    initRoute(appConfig,options);
 
     /*store*/
-    Vue.use(Vuex);
-    if (gmfConfig.stores && gmfConfig.stores.length > 0) {
-      storeConfig.modules = {};
-      gmfConfig.stores.forEach(item => {
-        storeConfig.modules[item.name] = item;
-      });
-    }
-    const store = new Vuex.Store(storeConfig);
+    initStore(appConfig,options);
 
     //Vuei18n
-    Vue.use(Vuei18n);
+    initI18n(appConfig,options);
+
+    if(options.app){
+      appConfig.render=(mount)=> mount(options.app);
+    }
+    if(mixin){
+      appConfig.mixins=[mixin];
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      initConfigs().then(res=>{
+        extend(appConfig.data.configs, res);
+        initHttp(http,res);
+        if(res&&res.loadEnums){
+          return loadEnums();
+        }
+        return true;      
+      }).then(res=>{
+          const app = new Vue(appConfig);
+          appConfig.router.onReady(() => {app.$mount(elID);});
+      });
+    });
+  }
+}
+function initConfigs(){
+  return new Promise((resolved, rejected) => {
+    return Promise.all([gmfConfig.configs.length > 0 ? gmfConfig.configs[0]() : false]).then(res => {
+      resolved(res[0]);
+    }, err => {
+      rejected(err);
+    });
+  });
+}
+function initRoute(appConfig,options){
+  Vue.use(VueRouter);    
+  const router = {
+    mode: 'history',
+    routes: gmfConfig.routes,
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        if (from.meta.keepAlive) {
+          from.meta.savedPosition = document.body.scrollTop
+        }
+        return { x: 0, y: to.meta.savedPosition || 0 }
+      }
+    },
+  };
+  const vueRouter = new VueRouter(router);
+  vueRouter.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth && !appConfig.data.configs.user) {
+      if (isString(appConfig.data.configs.auth.route)) {
+        next(appConfig.data.configs.auth.route + "?continue=" + to.fullPath);
+      } else {
+        next(extend({}, appConfig.data.configs.auth.route, { query: { continue: to.fullPath } }));
+      }
+    } else {
+      next();
+    }
+  });
+  appConfig.router=vueRouter;
+}
+function initStore(appConfig,options){
+  Vue.use(Vuex);
+  if (gmfConfig.stores && gmfConfig.stores.length > 0) {
+    storeConfig.modules = {};
+    gmfConfig.stores.forEach(item => {
+      storeConfig.modules[item.name] = item;
+    });
+  }
+  const store = new Vuex.Store(storeConfig);
+  appConfig.store=store;
+}
+function initI18n(appConfig,options){
+  Vue.use(Vuei18n);
     const i18n = new Vuei18n({
       locale:options.locale||'zh',
       messages: gmfConfig.i18ns.messages
     });
-    Promise.all(this.configs).then(res=>{
-      extend(rootData.configs, res);
-      initHttp(http,res);
-      if(res&&res.loadEnums){
-        return loadEnums();
-      }
-      return true;      
-    }).then(res=>{
-      const appConfig=getAppConfig();
-        appConfig.router=vueRouter;
-        appConfig.store= store;
-        appConfig.data= rootData;  
-        appConfig.i18n=i18n;
-        if(options.app){
-          appConfig.render=(mount)=> mount(options.app);
-        }
-        if(mixin){
-          appConfig.mixins=[mixin];
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-          const app = new Vue(appConfig);
-          vueRouter.onReady(() => {app.$mount(elID);});
-        });
-    });
-  }
+    appConfig.i18n=i18n;
 }
-
 function initHttp(http,config){
   http.defaults.headers.common.Ent = config.ent ? config.ent.id : false;
   if (config.token) {
@@ -129,7 +137,17 @@ function initHttp(http,config){
 }
 function getAppConfig(){
   return {
+    data:{
+      'appName': '',
+      'title': '',
+      'configs': { home: '/', ent: false, user: false, token: false, auth: { route: { name: 'auth.login' } } }
+    },
     methods: {
+      $loadConfigs(){
+        initConfigs().then(res=>{
+          this.$setConfigs(res);
+        })
+      },
       changedConfig() {
         extend(window.gmfConfig, this.configs);
         initHttp(this.$http,this.configs);

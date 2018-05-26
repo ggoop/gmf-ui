@@ -83,6 +83,7 @@ class gmfConfig {
   constructor() {
     this.routes = [];
     this.stores=[];
+    this.configs=[];
     this.i18ns={messages:{}};
     this.defaultRoutes = defaultRoutes;
   }
@@ -94,6 +95,9 @@ class gmfConfig {
     } else {
       this.routes.push(routes);
     }
+  }
+  config(fn){
+    this.configs.push(fn);
   }
   //i18n('en','home',{title:'title',name:'name of name'})
   i18n(locale,name,i18n){

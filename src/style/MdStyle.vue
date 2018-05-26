@@ -1,3 +1,3 @@
 <style lang="scss">
- @import "./all.scss";
+ @import "./index.scss";
 </style>
