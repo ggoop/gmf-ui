@@ -7,6 +7,10 @@
     "name": "ggoop",
     "email": "samuel_abe@163.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ggoop/gmf-ui.git"
+  },
   "files": [
     "dist",
     "src"
