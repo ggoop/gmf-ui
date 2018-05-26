@@ -33,14 +33,14 @@
     "vue": "^2.5.0"
   },
   "dependencies": {
-    "chart.js": "^2.7.2",
     "axios": "^0.17.1",
+    "chart.js": "^2.7.2",
     "date-fns": "^1.29.0",
-    "highcharts": "^6.1.0",
-    "tinymce": "^4.7.12",
-    "xlsx": "^0.12.12",
     "deepmerge": "^2.0.1",
-    "lodash": "^4.17.10"
+    "highcharts": "^6.1.0",
+    "lodash": "^4.17.10",
+    "tinymce": "^4.7.12",
+    "xlsx": "^0.12.12"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.5",
