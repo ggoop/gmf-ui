@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import http from './core/utils/http';
+import common from './core/utils/common';
 import VueRouter from 'vue-router';
 import extend from 'lodash/extend'
 import merge from 'lodash/merge'
@@ -187,6 +188,7 @@ function initVue(options) {
   options=options||{};
 
   Vue.prototype.$http = http;
+  Vue.prototype._=common;
 
   Vue.prototype.$toast = function(toast) {
     this.$root.$refs.rootToast && this.$root.$refs.rootToast.toast(toast);
