@@ -5,7 +5,7 @@
         <slot name="editor"></slot>
       </template>
       <template v-else-if="column&&column.dataType=='entity'">
-        <md-ref-input :md-ref-id="column.refId" @init="on_init_ref" v-model="row.data[column.field]"></md-ref-input>
+        <md-ref-input :md-ref-id="column.refId" :md-init="on_init_ref" v-model="row.data[column.field]"></md-ref-input>
       </template>
       <template v-else-if="column&&column.dataType=='enum'">
         <md-field>
@@ -16,7 +16,7 @@
         <md-datepicker v-model="row.data[column.field]"></md-datepicker>
       </template>
       <template v-else-if="column&&column.refId">
-        <md-ref-input :md-ref-id="column.refId" :md-ref-type="column.refType" @init="on_init_ref" v-model="row.data[column.field]"></md-ref-input>
+        <md-ref-input :md-ref-id="column.refId" :md-ref-type="column.refType" :md-init="on_init_ref" v-model="row.data[column.field]"></md-ref-input>
       </template>
       <template v-else>
         <md-field>
