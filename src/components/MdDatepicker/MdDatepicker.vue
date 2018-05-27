@@ -60,7 +60,7 @@ export default {
     selectedDate(selectedDate) {
       if (selectedDate) {
         this.modelDate = this.dateToHTMLString(selectedDate)
-        this.$emit('input', selectedDate)
+        this.$emit('input', this.modelDate)
       }
     },
     value() {
