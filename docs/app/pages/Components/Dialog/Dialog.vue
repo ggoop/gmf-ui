@@ -107,7 +107,13 @@
                 type: 'Boolean',
                 description: 'The dialog will become fullscreen on mobile screens. This option can disable this behavior.',
                 defaults: 'true'
-              }
+              },
+              {
+                name: 'md-position',
+                type: 'string',
+                description: 'The dialog position',
+                defaults: 'null'
+              },
             ]
           },
           events: {

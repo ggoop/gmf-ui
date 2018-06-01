@@ -1,5 +1,5 @@
 /*!
- * gmf-ui v1.1.2
+ * gmf-ui v1.1.6
  * Made with <3 by ggoop 2018
  * Released under the MIT License.
  */
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: SyntaxError: F:/project/gmf/gmf-ui/src/bridge.js: \"HTTP_API\" is read-only\n\n\u001b[0m \u001b[90m 62 | \u001b[39m      alert(\u001b[32m'[assert]: signature is required'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 63 | \u001b[39m    }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 64 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m \u001b[33m=\u001b[39m axios\u001b[33m.\u001b[39mcreate({ baseURL\u001b[33m:\u001b[39m combineURLs(\u001b[33mCONFIG_COPY\u001b[39m\u001b[33m.\u001b[39mhost\u001b[33m,\u001b[39m \u001b[32m'api'\u001b[39m) })\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 65 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m\u001b[33m.\u001b[39mdefaults\u001b[33m.\u001b[39mheaders\u001b[33m.\u001b[39mcommon[\u001b[32m'X-Requested-With'\u001b[39m] \u001b[33m=\u001b[39m \u001b[32m'XMLHttpRequest'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 66 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m\u001b[33m.\u001b[39mdefaults\u001b[33m.\u001b[39mheaders\u001b[33m.\u001b[39mpost[\u001b[32m'Content-Type'\u001b[39m] \u001b[33m=\u001b[39m \u001b[32m'application/json'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 67 | \u001b[39m    \u001b[90m//HTTP_API.defaults.headers.common['Authorization'] = AUTH_TOKEN;\u001b[39m\u001b[0m\n");
+throw new Error("Module build failed: SyntaxError: D:/project/gmf/gmf-ui/src/bridge.js: \"HTTP_API\" is read-only\n\n\u001b[0m \u001b[90m 62 | \u001b[39m      alert(\u001b[32m'[assert]: signature is required'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 63 | \u001b[39m    }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 64 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m \u001b[33m=\u001b[39m axios\u001b[33m.\u001b[39mcreate({ baseURL\u001b[33m:\u001b[39m combineURLs(\u001b[33mCONFIG_COPY\u001b[39m\u001b[33m.\u001b[39mhost\u001b[33m,\u001b[39m \u001b[32m'api'\u001b[39m) })\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 65 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m\u001b[33m.\u001b[39mdefaults\u001b[33m.\u001b[39mheaders\u001b[33m.\u001b[39mcommon[\u001b[32m'X-Requested-With'\u001b[39m] \u001b[33m=\u001b[39m \u001b[32m'XMLHttpRequest'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 66 | \u001b[39m    \u001b[33mHTTP_API\u001b[39m\u001b[33m.\u001b[39mdefaults\u001b[33m.\u001b[39mheaders\u001b[33m.\u001b[39mpost[\u001b[32m'Content-Type'\u001b[39m] \u001b[33m=\u001b[39m \u001b[32m'application/json'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 67 | \u001b[39m    \u001b[90m//HTTP_API.defaults.headers.common['Authorization'] = AUTH_TOKEN;\u001b[39m\u001b[0m\n");
 
 /***/ })
 /******/ ]);

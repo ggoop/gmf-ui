@@ -256,14 +256,18 @@ export const routes = [
     path: '/ui-elements/typography',
     name: 'ui-elements/typography',
     page: 'UiElements/Typography/Typography.vue'
-  },
-  {
+  }
+  
+]
+
+
+
+
+routes.push({
     path: '*',
     name: 'error',
     page: 'Error.vue'
-  }
-]
-
+  });
 export const mapRoutes = () => {
   const mappedRoutes = []
 

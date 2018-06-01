@@ -8,6 +8,15 @@
     "transform-class-properties",
     "transform-decorators",
     "transform-react-constant-elements",
-    "transform-react-inline-elements"
+    "transform-react-inline-elements",
+    [
+      "import",
+      [
+        {
+          "libraryName": "gmf",
+          "style": true
+        }
+      ]
+    ]
   ]
 }
