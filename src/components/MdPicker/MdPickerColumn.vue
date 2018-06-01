@@ -1,4 +1,3 @@
-
 <template>
   <div
     :class="[b(), className]"
@@ -24,15 +23,14 @@
 </template>
 
 <script>
-import create from '../utils/create';
-import { isObj } from '../utils';
+import MdComponent from 'gmf/core/MdComponent'
+import { isObject } from 'gmf/core/utils/common';
 
 const DEFAULT_DURATION = 200;
 const range = (num, arr) => Math.min(Math.max(num, arr[0]), arr[1]);
 
-export default create({
-  name: 'picker-column',
-
+export default MdComponent({
+  name: 'MdPickerColumn',
   props: {
     valueKey: String,
     className: String,
@@ -147,11 +145,11 @@ export default create({
     },
 
     isDisabled(option) {
-      return isObj(option) && option.disabled;
+      return isObject(option) && option.disabled;
     },
 
     getOptionText(option) {
-      return isObj(option) && this.valueKey in option ? option[this.valueKey] : option;
+      return isObject(option) && this.valueKey in option ? option[this.valueKey] : option;
     },
 
     setIndex(index, userAction) {
@@ -176,3 +174,24 @@ export default create({
   }
 });
 </script>
+<style lang="scss">
+@import "~gmf/components/MdAnimation/variables";
+
+.md-picker-column{
+  flex: 1;
+    overflow: hidden;
+    font-size: 17px;
+    text-align: center;
+    &-item {
+      padding: 0 5px;
+
+      &--selected {
+        color:#000;
+      }
+
+      &--disabled {
+        opacity: .3;
+      }
+    }
+}
+</style>

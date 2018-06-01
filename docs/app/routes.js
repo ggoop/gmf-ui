@@ -261,7 +261,11 @@ export const routes = [
 ]
 
 
-
+routes.push({
+  path: '/components/picker',
+  name: 'components/picker',
+  page: 'Components/Picker/Picker.vue'
+});
 
 routes.push({
     path: '*',

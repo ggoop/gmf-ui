@@ -17,24 +17,24 @@ import throttle from 'lodash/throttle'
 import forOwn from 'lodash/forOwn'
 import pick from 'lodash/pick'
 import spread from 'lodash/spread'
-function regEmail(email) {　　
-  if (String(email).indexOf('@') > 0) {　　　　
+function regEmail(email) {
+  if (String(email).indexOf('@') > 0) {
     var str = email.split('@'),
-      _s = '';　　　　
-    if (str[0].length > 3) {　　　　　　
-      for (var i = 0; i < str[0].length - 3; i++) {　　　　　　　　
-        _s += '•';　　　　　　
-      }　　　　
-    }　　　　
-    email = str[0].substr(0, 3) + _s + '@' + str[1]　　
-  }　　
+      _s = '';
+    if (str[0].length > 3) {
+      for (var i = 0; i < str[0].length - 3; i++) {
+        _s += '•';
+      }
+    }
+    email = str[0].substr(0, 3) + _s + '@' + str[1]
+  }
   return email
 }
 
 function regMobile(mobile) {
-  if (mobile && mobile.length > 7) {　　　　
-    mobile = mobile.substr(0, 3) + '••••' + mobile.substr(7)　　
-  }　　
+  if (mobile && mobile.length > 7) {
+    mobile = mobile.substr(0, 3) + '••••' + mobile.substr(7)
+  }
   return mobile;
 }
 
@@ -71,45 +71,47 @@ function isAbsoluteURL(url) {
 const uniqueId = () => {
   return Math.random().toString(36).slice(4);
 };
-
-const supplant = function(str, o) {
-  return str.replace(/\{([^{}]*)\}/g, function(a, b) {
+const uid=uniqueId;
+const supplant = function (str, o) {
+  return str.replace(/\{([^{}]*)\}/g, function (a, b) {
     var r = o[b];
     return typeof r === 'string' || typeof r === 'number' ? r : a;
   })
 }
-const isDefined = function(value) {
+const isDefined = function (value) {
   return typeof value !== 'undefined';
 }
-const css = function(element, name, value) {
+const css = function (element, name, value) {
   if (isDefined(value)) {
     element.style[name] = value;
   } else {
     return element.style[name];
   }
 }
-const style = function(el, st) {
-  forEach.forEach(st, function(value, key) {
+const style = function (el, st) {
+  forEach.forEach(st, function (value, key) {
     css(el, key, value);
   });
 }
 //驼峰命名法
-const snakeCase = function(name, separator) {
+const snakeCase = function (name, separator) {
   var regexp = /[A-Z.]/g;
   separator = separator || '-';
-  name = name.replace(regexp, function(letter, pos) {
+  name = name.replace(regexp, function (letter, pos) {
     return (pos ? separator : '') + letter.toLowerCase();
   });
   return name.replace(/\./g, '');
 };
-const now = function(formater) {
+const now = function (formater) {
   formater = formater || 'YYYY-MM-DD HH:mm:ss';
   return dateFormat(new Date(), formater);
-}
-
+};
+/**
+ * 获取time距离当前的秒 
+ * @param {*} time 
+ */
 function fTime(time) {
   if (!time) return '未知..';
-  //获取time距离当前的秒 
   var ct = 0,
     tu = (new Date()).getTime() / 1000,
     fu = tu;
@@ -142,8 +144,8 @@ function fTime(time) {
     return parseInt(ct / 2592000) + "月" + lb;
   }
   return parseInt(ct / 31104000) + "年" + lb;
-}
-const formatDecimal = function(num, options) {
+};
+const formatDecimal = function (num, options) {
   //precision:精度，保留的小数位数
   //unit:单位，0个，1十，2百，3千
   //quantile:分位数，默认3，表示千分位
@@ -170,7 +172,7 @@ const formatDecimal = function(num, options) {
   var temp = integers.join('');
   if (options.quantile > 0) {
     var remain = integers.length % options.quantile;
-    temp = integers.reduce(function(previousValue, currentValue, index) {
+    temp = integers.reduce(function (previousValue, currentValue, index) {
       if (index + 1 === remain || (index + 1 - remain) % options.quantile === 0) {
         return previousValue + currentValue + ",";
       } else {
@@ -185,6 +187,8 @@ const formatDecimal = function(num, options) {
   }
   return rtn;
 };
+
+
 
 const common = {
   isArray,
@@ -216,7 +220,7 @@ const common = {
   spread,
   fTime,
   now,
-  uid: uniqueId,
+  uid,
   regEmail,
   regMobile,
   values,
@@ -224,4 +228,42 @@ const common = {
   throttle,
   pick
 };
+export {
+  isArray,
+  uniqueId,
+  debounce,
+  supplant,
+  isDefined,
+  isAbsoluteURL,
+  combineURLs,
+  css,
+  style,
+  snakeCase,
+  formatDecimal,
+  merge,
+  each,
+  forEach,
+  forOwn,
+  isString,
+  isNumber,
+  isObject,
+  isUndefined,
+  isDate,
+  isFile,
+  isBlob,
+  isFunction,
+  isStream,
+  extend,
+  trim,
+  spread,
+  fTime,
+  now,
+  uid,
+  regEmail,
+  regMobile,
+  values,
+  startsWith,
+  throttle,
+  pick
+}
 export default common;

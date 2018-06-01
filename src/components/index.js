@@ -82,6 +82,8 @@ import MdIconBack from './MdIcon/Parts/MdIconBack'
 import MdIconMore from './MdIcon/Parts/MdIconMore'
 import MdIconDelete from './MdIcon/Parts/MdIconDelete'
 
+import MdPicker from './MdPicker'
+
 export {
   MdApp,
   MdAutocomplete,
@@ -165,4 +167,5 @@ export {
   MdIconMore,
   MdIconDelete,
 
+  MdPicker,
 }

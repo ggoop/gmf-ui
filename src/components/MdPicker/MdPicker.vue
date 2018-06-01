@@ -11,7 +11,7 @@
       <loading />
     </div>
     <div :class="b('columns')" :style="columnsStyle" @touchmove.prevent>
-      <picker-column
+      <md-picker-column
         v-for="(item, index) in currentColumns"
         :key="index"
         :value-key="valueKey"
@@ -28,15 +28,14 @@
 </template>
 
 <script>
-import create from '../utils/create';
-import PickerColumn from './PickerColumn';
-import deepClone from '../utils/deep-clone';
+import MdComponent from 'gmf/core/MdComponent'
+import MdPickerColumn from './MdPickerColumn';
+import deepClone from 'gmf/core/utils/MdDeepClone';
 
-export default create({
-  name: 'picker',
-
+export default MdComponent({
+  name: 'MdPicker',
   components: {
-    PickerColumn
+    MdPickerColumn
   },
 
   props: {
@@ -178,3 +177,63 @@ export default create({
   }
 });
 </script>
+
+
+<style lang="scss">
+@import "~gmf/components/MdAnimation/variables";
+.md-picker {
+  overflow: hidden;
+  user-select: none;
+  position: relative;
+  background-color: #fff;
+  -webkit-text-size-adjust: 100%; /* avoid iOS text size adjust */
+
+  &-toolbar {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    justify-content: space-between;
+  }
+
+  &-cancel,
+  &-confirm {
+    padding: 0 15px;
+    &:active {
+      
+    }
+  }
+
+  &-title {
+    max-width: 50%;
+    text-align: center;
+  }
+
+  &-columns {
+    display: flex;
+    position: relative;
+  }
+
+  &-loading {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    position: absolute;
+    background-color: rgba(255,255,255,.9);
+
+    circle {
+      stroke:bule;
+    }
+  }
+  &-frame {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    position: absolute;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+}
+</style>

@@ -70,6 +70,8 @@
       <router-link to="/components/tabs">{{ $t('pages.tabs.title') }}</router-link>
       <router-link to="/components/toolbar">{{ $t('pages.toolbar.title') }}</router-link>
       <router-link to="/components/tooltip">{{ $t('pages.tooltip.title') }}</router-link>
+
+      <router-link to="/components/picker">Picker</router-link>
     </div>
 
     <router-link to="/about">{{ $t('pages.about.title') }}</router-link>
