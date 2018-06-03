@@ -1,4 +1,5 @@
-import './style/MdStyle.vue'
+// import './style/MdStyle.vue'
+import './style/index.scss'
 import MdReactive from 'gmf/core/utils/MdReactive'
 import MdTheme from 'gmf/core/MdTheme'
 

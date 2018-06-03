@@ -1,7 +1,7 @@
 <template>
   <transition name="page-container" appear>
     <div class="page-container main-container" :class="{ centered }">
-      <ad-manager />
+
 
       <slot />
     </div>
@@ -11,12 +11,12 @@
 <script>
   import * as types from 'docs/app/store/mutation-types'
   import { mapState, mapActions } from 'vuex'
-  import AdManager from './AdManager'
+
 
   export default {
     name: 'PageContainer',
     components: {
-      AdManager
+      
     },
     props: {
       title: String,

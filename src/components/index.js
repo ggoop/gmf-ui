@@ -83,7 +83,9 @@ import MdIconMore from './MdIcon/Parts/MdIconMore'
 import MdIconDelete from './MdIcon/Parts/MdIconDelete'
 
 import MdPicker from './MdPicker'
-
+import MdPopup from './MdPopup'
+import MdSwipeout from './MdSwipeout'
+import MdVChart from './MdVChart'
 export {
   MdApp,
   MdAutocomplete,
@@ -168,4 +170,7 @@ export {
   MdIconDelete,
 
   MdPicker,
+  MdPopup,
+  MdSwipeout,
+  MdVChart
 }

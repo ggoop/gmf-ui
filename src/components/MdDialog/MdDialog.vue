@@ -5,7 +5,6 @@
         <md-focus-trap>
           <div class="md-dialog-container">
             <slot />
-
             <keep-alive>
               <md-overlay :class="mdBackdropClass" md-fixed :md-active="mdActive" @click="onClick" v-if="mdBackdrop" />
             </keep-alive>

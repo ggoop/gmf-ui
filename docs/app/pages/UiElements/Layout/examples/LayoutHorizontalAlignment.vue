@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="md-layout md-gutter">
-      <div class="md-layout-item md-size-25">
+    <md-layout md-gutter>
+      <md-layout md-flex="25">
         <md-field>
           <label for="vertical">Vertical</label>
           <md-select id="vertical" v-model="vertical">
@@ -10,9 +10,9 @@
             <md-option value="bottom">Bottom</md-option>
           </md-select>
         </md-field>
-      </div>
+      </md-layout>
 
-      <div class="md-layout-item md-size-25">
+      <md-layout md-flex="25">
         <md-field>
           <label for="horizontal">Horizontal</label>
           <md-select id="horizontal" v-model="horizontal">
@@ -23,23 +23,23 @@
             <md-option value="space-between">Space Between</md-option>
           </md-select>
         </md-field>
-      </div>
-    </div>
+      </md-layout>
+    </md-layout>
 
     <div class="example">
-      <div class="md-layout md-gutter" :class="`md-alignment-${vertical}-${horizontal}`">
-        <div class="md-layout-item md-size-25">
+      <md-layout md-gutter :class="`layout-align-${vertical}-${horizontal}`">
+        <md-layout md-flex="25" class="md-layout-item">
           <span>Lorem ipsum dolor sit amet.</span>
-        </div>
+        </md-layout>
 
-        <div class="md-layout-item md-size-25">
+        <md-layout md-flex="25" class="md-layout-item">
           <span>Repellat praesentium quasi ipsa totam, delectus aperiam deleniti, voluptates inventore.</span>
-        </div>
+        </md-layout>
 
-        <div class="md-layout-item md-size-25">
+        <md-layout md-flex="25" class="md-layout-item">
           <span>Excepturi natus dolorem maxime.</span>
-        </div>
-      </div>
+       </md-layout>
+      </md-layout>
     </div>
   </div>
 </template>

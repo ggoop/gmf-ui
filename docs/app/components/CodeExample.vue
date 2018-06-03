@@ -95,6 +95,7 @@
     z-index: 1;
     background-color: $color;
     color: #fff;
+    width: auto;
 
     .md-icon {
       color: #fff;

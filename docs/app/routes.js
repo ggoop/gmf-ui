@@ -1,5 +1,4 @@
-export const routes = [
-  {
+export const routes = [{
     path: '/components/badge',
     name: 'components/badge',
     page: 'Components/Badge/Badge.vue'
@@ -257,7 +256,6 @@ export const routes = [
     name: 'ui-elements/typography',
     page: 'UiElements/Typography/Typography.vue'
   }
-  
 ]
 
 
@@ -266,12 +264,32 @@ routes.push({
   name: 'components/picker',
   page: 'Components/Picker/Picker.vue'
 });
+routes.push({
+  path: '/components/popup',
+  name: 'components/popup',
+  page: 'Components/Popup/Popup.vue'
+});
+routes.push({
+  path: '/components/swipeout',
+  name: 'components/swipeout',
+  page: 'Components/swipeout/swipeout.vue'
+});
+routes.push({
+  path: '/components/vchart',
+  name: 'components/vchart',
+  page: 'Components/vchart/default.vue'
+});
+routes.push({
+  path: '/ui-elements/layout-grid',
+  name: 'ui-elements/layout-grid',
+  page: 'UiElements/LayoutGrid/LayoutGrid.vue'
+});
 
 routes.push({
-    path: '*',
-    name: 'error',
-    page: 'Error.vue'
-  });
+  path: '*',
+  name: 'error',
+  page: 'Error.vue'
+});
 export const mapRoutes = () => {
   const mappedRoutes = []
 

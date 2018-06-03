@@ -15,62 +15,62 @@ import Vuei18n from 'vue-i18n'
 import combineURL from './core/utils/MdCombineURLs'
 
 export default class Start {
-  constructor(columnComponent) {
-  }
+  constructor(columnComponent) {}
   use(component) {
     Vue.use(component);
   }
   route(routes) {
     gmfConfig.route(routes);
   }
-  config(fn){
+  config(fn) {
     gmfConfig.config(fn);
   }
   store(store) {
     gmfConfig.store(store);
   }
-  i18n(locale,name,i18n){
-    gmfConfig.i18n(locale,name,i18n);
+  i18n(locale, name, i18n) {
+    gmfConfig.i18n(locale, name, i18n);
   }
   run(options, mixin) {
     options = options || {};
     const elID = options.elID || '#gmfApp';
-    http.defaults.baseURL =combineURL(options.host,'/api');
+    http.defaults.baseURL = combineURL(options.host, '/api');
     http.defaults.headers = { common: { Ent: false } };
-    initVue(options); 
+    initVue(options);
 
-    const appConfig=getAppConfig();
+    const appConfig = getAppConfig();
     /*routes*/
-    initRoute(appConfig,options);
+    initRoute(appConfig, options);
 
     /*store*/
-    initStore(appConfig,options);
+    initStore(appConfig, options);
 
     //Vuei18n
-    initI18n(appConfig,options);
+    initI18n(appConfig, options);
 
-    if(options.app){
-      appConfig.render=(mount)=> mount(options.app);
+    if (options.app) {
+      appConfig.render = (mount) => mount(options.app);
     }
-    if(mixin){
-      appConfig.mixins=[mixin];
+    if (mixin) {
+      appConfig.mixins = [mixin];
     }
     document.addEventListener('DOMContentLoaded', () => {
-      initConfigs().then(res=>{
+      initConfigs().then(res => {
         extend(appConfig.data.configs, res);
-        initHttp(http,res);
-        if(res&&res.loadEnums){
+        initHttp(http, res);
+        if (res && res.loadEnums) {
           return loadEnums();
         }
-        return true;      
-      }).then(res=>{
-          const app = new Vue(appConfig);
-          appConfig.router.onReady(() => {app.$mount(elID);});
+        return true;
+      }).then(res => {
+        const app = new Vue(appConfig);
+        appConfig.router.onReady(() => { app.$mount(elID); });
       });
     });
   }
 }
-function initConfigs(){
+
+function initConfigs() {
   return new Promise((resolved, rejected) => {
     return Promise.all([gmfConfig.configs.length > 0 ? gmfConfig.configs[0]() : false]).then(res => {
       resolved(res[0]);
@@ -79,8 +79,9 @@ function initConfigs(){
     });
   });
 }
-function initRoute(appConfig,options){
-  Vue.use(VueRouter);    
+
+function initRoute(appConfig, options) {
+  Vue.use(VueRouter);
   const router = {
     mode: 'history',
     routes: gmfConfig.routes,
@@ -107,9 +108,10 @@ function initRoute(appConfig,options){
       next();
     }
   });
-  appConfig.router=vueRouter;
+  appConfig.router = vueRouter;
 }
-function initStore(appConfig,options){
+
+function initStore(appConfig, options) {
   Vue.use(Vuex);
   if (gmfConfig.stores && gmfConfig.stores.length > 0) {
     storeConfig.modules = {};
@@ -118,17 +120,19 @@ function initStore(appConfig,options){
     });
   }
   const store = new Vuex.Store(storeConfig);
-  appConfig.store=store;
+  appConfig.store = store;
 }
-function initI18n(appConfig,options){
+
+function initI18n(appConfig, options) {
   Vue.use(Vuei18n);
-    const i18n = new Vuei18n({
-      locale:options.locale||'zh',
-      messages: gmfConfig.i18ns.messages
-    });
-    appConfig.i18n=i18n;
+  const i18n = new Vuei18n({
+    locale: options.locale || 'zh',
+    messages: gmfConfig.i18ns.messages
+  });
+  appConfig.i18n = i18n;
 }
-function initHttp(http,config){
+
+function initHttp(http, config) {
   http.defaults.headers.common.Ent = config.ent ? config.ent.id : false;
   if (config.token) {
     http.defaults.headers.common.Authorization = (config.token.token_type ? config.token.token_type : "Bearer") + " " + config.token.access_token;
@@ -136,22 +140,23 @@ function initHttp(http,config){
     http.defaults.headers.common.Authorization = false;
   }
 }
-function getAppConfig(){
+
+function getAppConfig() {
   return {
-    data:{
+    data: {
       'appName': '',
       'title': '',
       'configs': { home: '/', ent: false, user: false, token: false, auth: { route: { name: 'auth.login' } } }
     },
     methods: {
-      $loadConfigs(){
-        initConfigs().then(res=>{
+      $loadConfigs() {
+        initConfigs().then(res => {
           this.$setConfigs(res);
         })
       },
       changedConfig() {
         extend(window.gmfConfig, this.configs);
-        initHttp(this.$http,this.configs);
+        initHttp(this.$http, this.configs);
       },
       setCacheEnum(item) {
         enumCache.set(item);
@@ -163,19 +168,19 @@ function getAppConfig(){
         return enumCache.getEnumName(type, item);
       },
       issueUid() {
-        return new Promise((resolved, rejected)=> {
-          this.$http.get('sys/datas/uid').then(res=>{
+        return new Promise((resolved, rejected) => {
+          this.$http.get('sys/datas/uid').then(res => {
             resolved(res.data.data);
-          },err=>{
+          }, err => {
             rejected(false);
           });
         });
       },
       issueSn(node, num) {
-        return new Promise((resolved, rejected)=> {
-          this.$http.get('sys/datas/sn', { params: { node: node, num: num } }).then(res=>{
+        return new Promise((resolved, rejected) => {
+          this.$http.get('sys/datas/sn', { params: { node: node, num: num } }).then(res => {
             resolved(res.data.data);
-          },err=>{
+          }, err => {
             rejected(false);
           });
         });
@@ -185,11 +190,11 @@ function getAppConfig(){
 }
 
 function initVue(options) {
-  options=options||{};
+  options = options || {};
 
   Vue.prototype.$http = http;
-  Vue.prototype._=common;
-
+  Vue.prototype._ = common;
+  Vue.prototype.$devicePixelRatio = 1;
   Vue.prototype.$toast = function(toast) {
     this.$root.$refs.rootToast && this.$root.$refs.rootToast.toast(toast);
   }
@@ -242,16 +247,17 @@ function initVue(options) {
     this.$root.title = title;
   };
 }
-function  loadEnums() {
-  return new Promise((resolved, rejected)=> {
-    http.get('sys/enums/all').then(res=>{
+
+function loadEnums() {
+  return new Promise((resolved, rejected) => {
+    http.get('sys/enums/all').then(res => {
       if (res && res.data && res.data.data) {
         res.data.data.forEach((item) => {
           enumCache.set(item);
         });
       }
       resolved();
-    },err=>{
+    }, err => {
       rejected();
     });
   });

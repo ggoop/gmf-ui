@@ -1,239 +1,310 @@
 <template>
-  <div :class="b()">
-    <div :class="b('toolbar')" class="van-hairline--top-bottom" v-if="showToolbar">
-      <slot>
-        <div :class="b('cancel')" @click="emit('cancel')">{{ cancelButtonText || $t('cancel') }}</div>
-        <div :class="b('title')" class="van-ellipsis" v-if="title" v-text="title" />
-        <div :class="b('confirm')" @click="emit('confirm')">{{ confirmButtonText || $t('confirm') }}</div>
-      </slot>
-    </div>
-    <div v-if="loading" :class="b('loading')">
-      <loading />
-    </div>
-    <div :class="b('columns')" :style="columnsStyle" @touchmove.prevent>
-      <md-picker-column
-        v-for="(item, index) in currentColumns"
-        :key="index"
-        :value-key="valueKey"
-        :options="item.values"
-        :class-name="item.className"
-        :default-index="item.defaultIndex"
-        :item-height="itemHeight"
-        :visible-item-count="visibleItemCount"
-        @change="onChange(index)"
-      />
-      <div :class="b('frame')" class="van-hairline--top-bottom" :style="frameStyle" />
-    </div>
+  <div class="md-picker" :class="[$mdActiveTheme]">
+    <md-flexbox :gutter="0">
+      <md-flexbox-item :span="mdColumnWidth && mdColumnWidth[index]" v-for="(one, index) in currentData" :key="index" style="margin-left:0;">
+        <div class="md-picker-item" :id="`md-picker-${uuid}-${index}`"></div>
+      </md-flexbox-item>
+    </md-flexbox>
   </div>
 </template>
-
 <script>
+import Scroller from './scroller'
+import { MdFlexbox, MdFlexboxItem } from '../MdFlexbox'
+import Manager from './chain'
+import value2name from 'gmf/core/utils/MdValue2Name'
+import isArray from 'gmf/core/utils/MdIsArray'
 import MdComponent from 'gmf/core/MdComponent'
-import MdPickerColumn from './MdPickerColumn';
-import deepClone from 'gmf/core/utils/MdDeepClone';
-
-export default MdComponent({
+export default new MdComponent({
   name: 'MdPicker',
   components: {
-    MdPickerColumn
+    MdFlexbox,
+    MdFlexboxItem
   },
-
-  props: {
-    title: String,
-    loading: Boolean,
-    showToolbar: Boolean,
-    confirmButtonText: String,
-    cancelButtonText: String,
-    visibleItemCount: {
-      type: Number,
-      default: 5
-    },
-    valueKey: {
-      type: String,
-      default: 'text'
-    },
-    itemHeight: {
-      type: Number,
-      default: 44
-    },
-    columns: {
-      type: Array,
-      default: () => []
+  created() {
+    if (this.mdColumns !== 0) {
+      const length = this.mdColumns
+      this.store = new Manager(this.mdData, length, this.mdFixedColumns || this.mdColumns)
+      this.currentData = this.store.getColumns(this.value)
     }
   },
+  mounted() {
+    this.uuid = Math.random().toString(36).substring(3, 8)
+    this.$nextTick(() => {
+      this.render(this.currentData, this.currentValue)
+    })
+  },
+  props: {
+    mdData: Array,
+    mdColumns: {
+      type: Number,
+      default: 0
+    },
+    mdFixedColumns: {
+      type: Number,
+      default: 0
+    },
+    value: Array,
+    mdItemClass: {
+      type: String,
+      default: 'scroller-item'
+    },
+    mdColumnWidth: Array
+  },
+  methods: {
+    getNameValues() {
+      return value2name(this.currentValue, this.mdData)
+    },
+    getId(i) {
+      return `#md-picker-${this.uuid}-${i}`
+    },
+    render(data, value) {
+      this.count = this.currentData.length
+      const _this = this
+      if (!data || !data.length) {
+        return
+      }
+      let count = this.currentData.length
+      // set first item as value
+      if (value.length < count) {
+        for (let i = 0; i < count; i++) {
+          if (process.env.NODE_ENV === 'development' &&
+            typeof data[i][0] === 'undefined' &&
+            isArray(this.mdData) &&
+            this.mdData[0] &&
+            typeof this.mdData[0].value !== 'undefined' &&
+            !this.mdColumns) {
+            console.error('[VUX error] 渲染出错，如果为联动模式，需要指定 mdColumns(列数)')
+          }
+          this.$set(_this.currentValue, i, data[i][0].value || data[i][0])
+        }
+      }
 
+      for (let i = 0; i < data.length; i++) {
+        /**
+         * Still don't know why this happens
+         */
+        if (!document.querySelector(_this.getId(i))) {
+          return
+        }
+
+        _this.scroller[i] && _this.scroller[i].destroy()
+        _this.scroller[i] = new Scroller(_this.getId(i), {
+          data: data[i],
+          defaultValue: value[i] || data[i][0].value,
+          itemClass: _this.mdItemClass,
+          onSelect(value) {
+            _this.$set(_this.currentValue, i, value)
+            if (!this.mdColumns || (this.mdColumns && _this.getValue().length === _this.store.count)) {
+              _this.$nextTick(() => {
+                _this.$emit('on-change', _this.getValue())
+              })
+            }
+            if (_this.mdColumns !== 0) {
+              _this.renderChain(i + 1)
+            }
+          }
+        })
+        if (_this.currentValue) {
+          _this.scroller[i].select(value[i])
+        }
+      }
+    },
+    renderChain(i) {
+      if (!this.mdColumns) {
+        return
+      }
+
+      // do not render for last scroller
+      if (i > this.count - 1) {
+        return
+      }
+
+      const _this = this
+      let ID = this.getId(i)
+      // destroy old one
+      this.scroller[i].destroy()
+      let list = this.store.getChildren(_this.getValue()[i - 1])
+      this.scroller[i] = new Scroller(ID, {
+        data: list,
+        itemClass: _this.mdItemClass,
+        onSelect(value) {
+          _this.$set(_this.currentValue, i, value)
+          _this.$nextTick(() => {
+            _this.$emit('on-change', _this.getValue())
+          })
+          _this.renderChain(i + 1)
+        }
+      })
+      // list is Array(empty) as maybe
+      if (list.length) {
+        this.$set(this.currentValue, i, list[0].value)
+        this.renderChain(i + 1)
+      } else {
+        this.$set(this.currentValue, i, null)
+      }
+    },
+    getValue() {
+      let data = []
+      for (let i = 0; i < this.currentData.length; i++) {
+        if (this.scroller[i]) {
+          data.push(this.scroller[i].value)
+        } else {
+          return []
+        }
+      }
+      return data
+    },
+    emitValueChange(val) {
+      if (!this.mdColumns || (this.mdColumns && val.length === this.store.count)) {
+        this.$emit('on-change', val)
+      }
+    }
+  },
   data() {
     return {
-      children: [],
-      currentColumns: []
-    };
+      scroller: [],
+      count: 0,
+      uuid: '',
+      currentData: this.mdData,
+      currentValue: this.value
+    }
   },
-
   watch: {
-    columns: {
-      handler() {
-        const columns = this.columns.map(deepClone);
-        this.isSimpleColumn = columns.length && !columns[0].values;
-        this.currentColumns = this.isSimpleColumn ? [{ values: columns }] : columns;
-      },
-      immediate: true
+    value(val) {
+      if (JSON.stringify(val) !== JSON.stringify(this.currentValue)) {
+        this.currentValue = val
+      }
+    },
+    currentValue(val, oldVal) {
+      this.$emit('input', val)
+      // render all the scroller for chain datas
+      if (this.mdColumns !== 0) {
+        if (val.length > 0) {
+          if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
+            this.currentData = this.store.getColumns(val)
+            this.$nextTick(function() {
+              this.render(this.currentData, val)
+            })
+          }
+        }
+      } else {
+        if (val.length) {
+          for (let i = 0; i < val.length; i++) {
+            if (this.scroller[i] && this.scroller[i].value !== val[i]) {
+              this.scroller[i].select(val[i])
+            }
+          }
+        } else {
+          this.render(this.currentData, [])
+        }
+      }
+    },
+    mdData(val) {
+      if (JSON.stringify(val) !== JSON.stringify(this.currentData)) {
+        this.currentData = val
+      }
+    },
+    currentData(newData) {
+      if (Object.prototype.toString.call(newData[0]) === '[object Array]') {
+        this.$nextTick(() => {
+          this.render(newData, this.currentValue)
+          // emit on-change after rerender
+          this.$nextTick(() => {
+            this.emitValueChange(this.getValue())
+
+            if (JSON.stringify(this.getValue()) !== JSON.stringify(this.currentValue)) {
+              if (!this.mdColumns || (this.mdColumns && this.getValue().length === this.store.count)) {
+                this.currentValue = this.getValue()
+              }
+            }
+          })
+        })
+      } else {
+        if (this.mdColumns !== 0) {
+          if (!newData.length) {
+            return
+          }
+          const length = this.mdColumns
+          this.store = new Manager(newData, length, this.mdFixedColumns || this.mdColumns)
+          this.currentData = this.store.getColumns(this.currentValue)
+        }
+      }
     }
   },
-
-  computed: {
-    frameStyle() {
-      return {
-        height: this.itemHeight + 'px'
-      };
-    },
-
-    columnsStyle() {
-      return {
-        height: this.itemHeight * this.visibleItemCount + 'px'
-      };
-    }
-  },
-
-  methods: {
-    emit(event) {
-      if (this.isSimpleColumn) {
-        this.$emit(event, this.getColumnValue(0), this.getColumnIndex(0));
-      } else {
-        this.$emit(event, this.getValues(), this.getIndexes());
-      }
-    },
-
-    onChange(columnIndex) {
-      if (this.isSimpleColumn) {
-        this.$emit('change', this, this.getColumnValue(0), this.getColumnIndex(0));
-      } else {
-        this.$emit('change', this, this.getValues(), columnIndex);
-      }
-    },
-
-    // get column instance by index
-    getColumn(index) {
-      return this.children[index];
-    },
-
-    // get column value by index
-    getColumnValue(index) {
-      return (this.getColumn(index) || {}).currentValue;
-    },
-
-    // set column value by index
-    setColumnValue(index, value) {
-      const column = this.getColumn(index);
-      column && column.setValue(value);
-    },
-
-    // get column option index by column index
-    getColumnIndex(columnIndex) {
-      return (this.getColumn(columnIndex) || {}).currentIndex;
-    },
-
-    // set column option index by column index
-    setColumnIndex(columnIndex, optionIndex) {
-      const column = this.getColumn(columnIndex);
-      column && column.setIndex(optionIndex);
-    },
-
-    // get options of column by index
-    getColumnValues(index) {
-      return (this.currentColumns[index] || {}).values;
-    },
-
-    // set options of column by index
-    setColumnValues(index, options) {
-      const column = this.currentColumns[index];
-      if (column) {
-        column.values = options;
-      }
-    },
-
-    // get values of all columns
-    getValues() {
-      return this.children.map(child => child.currentValue);
-    },
-
-    // set values of all columns
-    setValues(values) {
-      values.forEach((value, index) => {
-        this.setColumnValue(index, value);
-      });
-    },
-
-    // get indexes of all columns
-    getIndexes() {
-      return this.children.map(child => child.currentIndex);
-    },
-
-    // set indexes of all columns
-    setIndexes(indexes) {
-      indexes.forEach((optionIndex, columnIndex) => {
-        this.setColumnIndex(columnIndex, optionIndex);
-      });
+  beforeDestroy() {
+    for (let i = 0; i < this.count; i++) {
+      this.scroller[i] && this.scroller[i].destroy()
+      this.scroller[i] = null
     }
   }
 });
+
 </script>
-
-
 <style lang="scss">
 @import "~gmf/components/MdAnimation/variables";
 .md-picker {
-  overflow: hidden;
-  user-select: none;
-  position: relative;
-  background-color: #fff;
-  -webkit-text-size-adjust: 100%; /* avoid iOS text size adjust */
-
-  &-toolbar {
-    display: flex;
-    height: 40px;
-    line-height: 40px;
-    justify-content: space-between;
-  }
-
-  &-cancel,
-  &-confirm {
-    padding: 0 15px;
-    &:active {
-      
-    }
-  }
-
-  &-title {
-    max-width: 50%;
-    text-align: center;
-  }
-
-  &-columns {
-    display: flex;
+  .scroller-component {
+    display: block;
     position: relative;
+    height: 238px;
+    overflow: hidden;
+    width: 100%;
   }
 
-  &-loading {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
+  .scroller-content {
     position: absolute;
-    background-color: rgba(255,255,255,.9);
-
-    circle {
-      stroke:bule;
-    }
-  }
-  &-frame {
-    top: 50%;
     left: 0;
+    top: 0;
     width: 100%;
     z-index: 1;
+  }
+
+  .scroller-mask {
     position: absolute;
-    pointer-events: none;
-    transform: translateY(-50%);
+    left: 0;
+    top: 0;
+    height: 100%;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 3;
+    transform: translateZ(0px);
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6)),
+    -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6));
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6)),
+    linear-gradient(to top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6));
+    background-position: top, bottom;
+    background-size: 100% 102px;
+    background-repeat: no-repeat;
+  }
+
+  .scroller-item {
+    text-align: center;
+    font-size: 16px;
+    height: 34px;
+    line-height: 34px;
+    color: #000;
+  }
+
+  .scroller-indicator {
+    width: 100%;
+    height: 34px;
+    position: absolute;
+    left: 0;
+    top: 102px;
+    z-index: 3;
+    background-image: -webkit-linear-gradient(top, #d0d0d0, #d0d0d0, transparent, transparent),
+    -webkit-linear-gradient(bottom, #d0d0d0, #d0d0d0, transparent, transparent);
+    background-image: linear-gradient(to bottom, #d0d0d0, #d0d0d0, transparent, transparent),
+    linear-gradient(to top, #d0d0d0, #d0d0d0, transparent, transparent);
+    background-position: top, bottom;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+  .scroller-item {
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

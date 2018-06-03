@@ -49,6 +49,9 @@ import MdWrap from './MdWrap'
 import MdTable from './MdTable'
 import MdDatepicker from './MdDatepicker'
 import MdPicker from './MdPicker'
+import MdPopup from './MdPopup'
+import MdSwipeout from './MdSwipeout'
+import MdVChart from './MdVChart'
 export {
   MdApp,
   MdAutocomplete,
@@ -98,5 +101,8 @@ export {
 
   MdTable,
   MdDatepicker,
-  MdPicker
+  MdPicker,
+  MdPopup,
+  MdSwipeout,
+  MdVChart
 }
